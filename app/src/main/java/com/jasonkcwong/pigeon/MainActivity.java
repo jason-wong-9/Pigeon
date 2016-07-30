@@ -1,16 +1,12 @@
 package com.jasonkcwong.pigeon;
 
-import android.Manifest;
 import android.content.ContentResolver;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,14 +32,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        FirebaseUser user = mAuth.getCurrentUser();
         String phoneNumber = "604-123-1234";
-
+//        if (user == null){
+//            Log.d(TAG, "Not logged in");
+//            String className = this.getClass().getName();
+//            if (!(className == "LoginActivity")) {
+//                Intent intent = new Intent(getBaseContext(), AccountActivity.class);
+//                // intent.putExtra("EXTRA_SESSION_ID", sessionId);
+//                startActivity(intent);
+//            }
+//        } else {
+//            Log.d(TAG, "Logged in as: " + user.getUid());
+//        }
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -52,24 +56,30 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_in" + user.getUid());
                 } else {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
+                    String className = this.getClass().getName();
+                    if (!(className == "LoginActivity")) {
+                        Intent intent = new Intent(getBaseContext(), AccountActivity.class);
+                        // intent.putExtra("EXTRA_SESSION_ID", sessionId);
+                        startActivity(intent);
+                    }
                 }
             }
         };
         //createAccount("jason_@hotmail.com", "1232313", phoneNumber);
-        final int REQUEST_CODE_ASK_PERMISSIONS = 123;
-        int hashReadContactsPermission = ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.READ_CONTACTS);
-        if (hashReadContactsPermission != PackageManager.PERMISSION_GRANTED){
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                    Manifest.permission.READ_CONTACTS)){
-                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_CONTACTS},
-                        REQUEST_CODE_ASK_PERMISSIONS);
-                return;
-            }
-        }
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[] {Manifest.permission.READ_CONTACTS}, REQUEST_CODE_ASK_PERMISSIONS);
-        retrieveAllContacts();
+//        final int REQUEST_CODE_ASK_PERMISSIONS = 123;
+//        int hashReadContactsPermission = ContextCompat.checkSelfPermission(MainActivity.this,
+//                Manifest.permission.READ_CONTACTS);
+//        if (hashReadContactsPermission != PackageManager.PERMISSION_GRANTED){
+//            if (!ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
+//                    Manifest.permission.READ_CONTACTS)){
+//                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_CONTACTS},
+//                        REQUEST_CODE_ASK_PERMISSIONS);
+//                return;
+//            }
+//        }
+//        ActivityCompat.requestPermissions(MainActivity.this,
+//                new String[] {Manifest.permission.READ_CONTACTS}, REQUEST_CODE_ASK_PERMISSIONS);
+//        retrieveAllContacts();
     }
 
     @Override
@@ -153,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, cursor.getString(indexNumber));
             } while (cursor.moveToNext());
         }
-
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
