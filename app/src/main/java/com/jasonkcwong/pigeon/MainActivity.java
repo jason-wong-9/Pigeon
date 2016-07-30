@@ -14,12 +14,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.jasonkcwong.pigeon.Models.User;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getName();
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        String phoneNumber = "604-123-1234";
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -40,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
+        createAccount("jason_@hotmail.com", "1232313", phoneNumber);
     }
 
     @Override
@@ -57,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void createAccount(String email, String password){
+    private void createAccount(String email, String password, final String phoneNumber){
         Log.d(TAG, "createAccount:" + email);
         //Validate form : requires 6 characters
 
@@ -67,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
-                        if (!task.isSuccessful()){
+                        if (task.isSuccessful()){
+                            onAuthSuccess(task.getResult().getUser(), phoneNumber, true);
+                        } else {
                             Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -84,11 +94,27 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                        if (!task.isSuccessful()){
+                        if (task.isSuccessful()){
+                            onAuthSuccess(task.getResult().getUser(), "", false);
+                        } else {
                             Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private void onAuthSuccess(FirebaseUser user, String phoneNumber, boolean isFirstTime){
+        //Intent to another Activity
+        final String userId = user.getUid();
+        if (isFirstTime){
+            writeNewUser(userId, user.getEmail(), phoneNumber);
+        }
+
+    }
+
+    private void writeNewUser(String userId, String email, String phoneNumber){
+        User user = new User(email, phoneNumber);
+        mDatabase.child("users").child(userId).setValue(user);
     }
 
     @Override
