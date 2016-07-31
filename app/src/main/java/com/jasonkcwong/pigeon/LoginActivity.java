@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
  * Created by jason on 16-07-30.
  */
 public class LoginActivity extends AppCompatActivity {
-    private final String TAG = LoginActivity.class.getName();
+    public final String TAG = LoginActivity.class.getName();
     private FirebaseAuth mAuth;
 
     private EditText mEmailText;

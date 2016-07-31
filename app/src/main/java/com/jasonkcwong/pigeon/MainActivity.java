@@ -1,10 +1,7 @@
 package com.jasonkcwong.pigeon;
 
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -43,20 +40,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-//        final int REQUEST_CODE_ASK_PERMISSIONS = 123;
-//        int hashReadContactsPermission = ContextCompat.checkSelfPermission(MainActivity.this,
-//                Manifest.permission.READ_CONTACTS);
-//        if (hashReadContactsPermission != PackageManager.PERMISSION_GRANTED){
-//            if (!ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-//                    Manifest.permission.READ_CONTACTS)){
-//                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_CONTACTS},
-//                        REQUEST_CODE_ASK_PERMISSIONS);
-//                return;
-//            }
-//        }
-//        ActivityCompat.requestPermissions(MainActivity.this,
-//                new String[] {Manifest.permission.READ_CONTACTS}, REQUEST_CODE_ASK_PERMISSIONS);
-//        retrieveAllContacts();
     }
 
     @Override
@@ -75,22 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void retrieveAllContacts() {
-        ContentResolver contentResolver = getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                new String[] {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                        ContactsContract.CommonDataKinds.Phone.NUMBER }, null, null, null);
-
-        int indexName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-        int indexNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-        if (cursor.moveToFirst()){
-            do {
-
-                Log.d(TAG, cursor.getString(indexName));
-                Log.d(TAG, cursor.getString(indexNumber));
-            } while (cursor.moveToNext());
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

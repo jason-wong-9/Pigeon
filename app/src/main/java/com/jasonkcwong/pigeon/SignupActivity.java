@@ -1,9 +1,15 @@
 package com.jasonkcwong.pigeon;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,13 +25,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.jasonkcwong.pigeon.Models.Contact;
 import com.jasonkcwong.pigeon.Models.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jason on 16-07-30.
  */
 public class SignupActivity extends AppCompatActivity{
-    private final String TAG = SignupActivity.class.getName();
+    public final String TAG = SignupActivity.class.getName();
+
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -35,6 +46,7 @@ public class SignupActivity extends AppCompatActivity{
 
     private Button mSignupButton;
     private Button mSwitchButton;
+    final int REQUEST_CODE_ASK_PERMISSIONS = 123;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +104,7 @@ public class SignupActivity extends AppCompatActivity{
         final String userId = user.getUid();
         if (writeNewUser(userId, user.getEmail(), phoneNumber)){
             //Intent
+            retrieveAllContacts();
         }
 
     }
@@ -140,6 +153,71 @@ public class SignupActivity extends AppCompatActivity{
 
     private boolean validatePhone(String phoneNumber){
         return android.util.Patterns.PHONE.matcher(phoneNumber).matches();
+    }
+
+    private List<Contact> retrieveContacts(){
+        ContentResolver contentResolver = getContentResolver();
+        Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                new String[] {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                        ContactsContract.CommonDataKinds.Phone.NUMBER }, null, null, null);
+
+        int indexName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+        int indexNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+        List<Contact> contacts = new ArrayList<>();
+        if (cursor.moveToFirst()){
+            do {
+                String name = cursor.getString(indexName);
+                String phoneNumber = cursor.getString(indexNumber);
+                Contact contact = new Contact(name, phoneNumber);
+                Log.d(TAG, "Add contact with name = " + name + " and phone number = " + phoneNumber);
+                contacts.add(contact);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return contacts;
+    }
+
+    private void retrieveAllContacts(){
+        if (ContextCompat.checkSelfPermission(SignupActivity.this,
+                android.Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale( SignupActivity.this,
+                    android.Manifest.permission.READ_CONTACTS)) {
+
+
+            } else {
+
+                ActivityCompat.requestPermissions( SignupActivity.this,
+                        new String[]{android.Manifest.permission.READ_CONTACTS},
+                        REQUEST_CODE_ASK_PERMISSIONS);
+
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    retrieveContacts();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
 
