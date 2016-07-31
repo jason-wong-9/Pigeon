@@ -13,14 +13,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Welcome to Pigeon"
+            android:textAlignment="center"
             android:id="@+id/textView"
             android:layout_gravity="center_horizontal"
             android:textColor="#dadad8"
-            android:textSize="30dp"
+
             android:layout_marginBottom="50dp" />
 
 
@@ -29,22 +30,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/editText"
+
+            android:id="@+id/login_email_editText"
             android:layout_gravity="center_horizontal"
             android:hint="Email"
             android:textColorHint="#dadad8"
             android:textColor="#ffffff"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="16dp"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/editText2"
+
+            android:id="@+id/login_password_editText"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="16dp"
             android:hint="Password"
             android:textColorHint="#dadad8"
             android:textColor="#ffffff" />
@@ -53,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign In"
-            android:id="@+id/button"
+            android:id="@+id/button_login"
             android:layout_gravity="center_horizontal"
             app:backgroundTint="?attr/colorAccent"
             android:textColor="#ffffff" />
@@ -62,8 +63,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Switch to Signup"
-            android:id="@+id/button2"
-            android:layout_gravity="center_horizontal" />
+            android:id="@+id/login_button_switch"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
 
