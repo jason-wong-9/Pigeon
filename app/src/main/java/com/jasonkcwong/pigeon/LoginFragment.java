@@ -82,11 +82,9 @@ public class LoginFragment extends Fragment {
     }
 
     private void onAuthSuccess(){
-
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        intent.putExtra(MainActivity.EXTRA_CONTACT, MainActivity.CONTACT_FALSE);
+        Intent intent = new Intent(getActivity(), PigeonActivity.class);
+        intent.putExtra(PigeonActivity.EXTRA_CONTACT, PigeonActivity.CONTACT_FALSE);
         startActivity(intent);
-
     }
 
     private void switchSignup(){

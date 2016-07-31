@@ -100,9 +100,11 @@ public class SignupFragment extends Fragment {
         final String userId = user.getUid();
         if (writeNewUser(userId, user.getEmail(), phoneNumber)){
             //Intent
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_CONTACT, MainActivity.CONTACT_TRUE);
+
+            Intent intent = new Intent(getActivity(), PigeonActivity.class);
+            intent.putExtra(PigeonActivity.EXTRA_CONTACT, PigeonActivity.CONTACT_TRUE);
             startActivity(intent);
+            getActivity().finish();
         }
 
     }

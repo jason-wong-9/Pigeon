@@ -24,6 +24,11 @@
             android:label="Account"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".PigeonActivity"
+            android:label="Pigeon"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/MyMaterialTheme"/>
 
     </application>
 
