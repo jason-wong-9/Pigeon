@@ -3,11 +3,12 @@ package com.jasonkcwong.pigeon;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,8 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 /**
  * Created by jason on 16-07-30.
  */
-public class LoginActivity extends AppCompatActivity {
-    public final String TAG = LoginActivity.class.getName();
+public class LoginFragment extends Fragment {
+    public final String TAG = LoginFragment.class.getName();
     private FirebaseAuth mAuth;
 
     private EditText mEmailText;
@@ -31,15 +32,16 @@ public class LoginActivity extends AppCompatActivity {
     private Button mSwitchButton;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         mAuth = FirebaseAuth.getInstance();
-        mEmailText = (EditText) findViewById(R.id.login_email_editText);
-        mPasswordText = (EditText) findViewById(R.id.login_password_editText);
+        mEmailText = (EditText) rootView.findViewById(R.id.login_email_editText);
+        mPasswordText = (EditText) rootView.findViewById(R.id.login_password_editText);
 
-        mLoginButton = (Button) findViewById(R.id.button_login);
-        mSwitchButton = (Button) findViewById(R.id.login_button_switch);
+        mLoginButton = (Button) rootView.findViewById(R.id.button_login);
+        mSwitchButton = (Button) rootView.findViewById(R.id.login_button_switch);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 switchSignup();
             }
         });
+        return rootView;
     }
 
     private void login(){
@@ -63,24 +66,33 @@ public class LoginActivity extends AppCompatActivity {
         //ValidateForm
 
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
                         if (task.isSuccessful()){
                             Log.d(TAG, "Logged on sucessfully");
+                            onAuthSuccess();
                         } else {
-                            Toast.makeText(LoginActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Authentication Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
-    private void switchSignup(){
-        Intent intent = new Intent(getBaseContext(), SignupActivity.class);
+    private void onAuthSuccess(){
+
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_CONTACT, MainActivity.CONTACT_FALSE);
         startActivity(intent);
-        finish();
+
+    }
+
+    private void switchSignup(){
+        Intent intent = new Intent(getActivity(), AccountActivity.class);
+        intent.putExtra(AccountActivity.EXTRA_TYPE, AccountActivity.TYPE_SIGNUP);
+        startActivity(intent);
     }
 
     private boolean validateForm() {
