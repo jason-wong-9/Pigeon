@@ -1,4 +1,4 @@
-package com.jasonkcwong.pigeon;
+package com.jasonkcwong.pigeon.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

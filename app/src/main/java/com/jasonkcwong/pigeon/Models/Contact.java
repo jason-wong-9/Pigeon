@@ -6,10 +6,12 @@ package com.jasonkcwong.pigeon.Models;
 public class Contact {
     private String displayName;
     private String phoneNumber;
+    private String uid;
 
     public Contact(String displayName, String phoneNumber){
         this.displayName = displayName;
         this.phoneNumber = phoneNumber;
+        uid = "";
     }
 
     public String getDisplayName() {
@@ -18,5 +20,13 @@ public class Contact {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

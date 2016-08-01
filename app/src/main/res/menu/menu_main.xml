@@ -7,4 +7,5 @@
         android:orderInCategory="100"
         android:title="Log out"
         app:showAsAction="never" />
+
 </menu>

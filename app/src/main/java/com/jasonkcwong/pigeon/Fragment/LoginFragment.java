@@ -1,4 +1,4 @@
-package com.jasonkcwong.pigeon;
+package com.jasonkcwong.pigeon.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.jasonkcwong.pigeon.AccountActivity;
+import com.jasonkcwong.pigeon.PigeonActivity;
+import com.jasonkcwong.pigeon.R;
 
 /**
  * Created by jason on 16-07-30.
@@ -83,7 +86,6 @@ public class LoginFragment extends Fragment {
 
     private void onAuthSuccess(){
         Intent intent = new Intent(getActivity(), PigeonActivity.class);
-        intent.putExtra(PigeonActivity.EXTRA_CONTACT, PigeonActivity.CONTACT_FALSE);
         startActivity(intent);
     }
 

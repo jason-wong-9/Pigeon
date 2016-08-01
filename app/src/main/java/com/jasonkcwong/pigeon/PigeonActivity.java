@@ -1,15 +1,9 @@
 package com.jasonkcwong.pigeon;
 
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,10 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.jasonkcwong.pigeon.Models.Contact;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.jasonkcwong.pigeon.Adapters.PigeonPagerAdapter;
+import com.jasonkcwong.pigeon.Fragment.ChatsFragment;
+import com.jasonkcwong.pigeon.Fragment.ContactsFragment;
 
 /**
  * Created by jason on 16-07-31.
@@ -32,12 +25,7 @@ public class PigeonActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private FirebaseAuth mAuth;
-
-    public static final String EXTRA_CONTACT = "contact";
-    public static final int CONTACT_FALSE = 0;
-    public static final int CONTACT_TRUE = 1;
-
-    final int REQUEST_CODE_ASK_PERMISSIONS = 123;
+    private PigeonPagerAdapter adapter;
 
     public static final String frag_title_1 = "Chat";
     public static final String frag_title_2 = "Contact";
@@ -49,34 +37,27 @@ public class PigeonActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        int type = getIntent().getIntExtra(EXTRA_CONTACT, CONTACT_FALSE);
-
-        if (type == CONTACT_TRUE){
-            retrieveAllContacts();
-        }
-
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        setupViewPager(mViewPager);
+        setupViewPager();
 
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
 
-
     }
 
-    private void setupViewPager(ViewPager viewPager){
-        PigeonPagerAdapter adapter = new PigeonPagerAdapter(getSupportFragmentManager());
+    private void setupViewPager(){
+        adapter = new PigeonPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new ContactFragment(), frag_title_1);
+        adapter.addFragment(new ChatsFragment(), frag_title_1);
         Log.d(TAG, frag_title_1 + "Added");
 
-        adapter.addFragment(new ChatFragment(), frag_title_2);
+        adapter.addFragment(new ContactsFragment(), frag_title_2);
         Log.d(TAG, frag_title_2 + "Added");
 
-        viewPager.setAdapter(adapter);
+        mViewPager.setAdapter(adapter);
     }
 
     @Override
@@ -88,65 +69,15 @@ public class PigeonActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_logout){
+        if (id == R.id.action_logout) {
             mAuth.signOut();
             Intent intent = new Intent(this, AccountActivity.class);
             startActivity(intent);
             finish();
-            //Clear Everything
         }
         return true;
     }
 
-    private List<Contact> retrieveContacts(){
-        ContentResolver contentResolver = getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                new String[] {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                        ContactsContract.CommonDataKinds.Phone.NUMBER }, null, null, null);
 
-        int indexName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-        int indexNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-        List<Contact> contacts = new ArrayList<>();
-        if (cursor.moveToFirst()){
-            do {
-                String name = cursor.getString(indexName);
-                String phoneNumber = cursor.getString(indexNumber);
-                Contact contact = new Contact(name, phoneNumber);
-                Log.d(TAG, "Add contact with name = " + name + " and phone number = " + phoneNumber);
-                contacts.add(contact);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return contacts;
-    }
 
-    public void retrieveAllContacts(){
-        if (ContextCompat.checkSelfPermission(PigeonActivity.this,
-                android.Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale( PigeonActivity.this,
-                    android.Manifest.permission.READ_CONTACTS)) {
-            } else {
-                ActivityCompat.requestPermissions(PigeonActivity.this,
-                        new String[]{android.Manifest.permission.READ_CONTACTS},
-                        REQUEST_CODE_ASK_PERMISSIONS);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_PERMISSIONS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    retrieveContacts();
-
-                }
-                return;
-            }
-        }
-    }
 }

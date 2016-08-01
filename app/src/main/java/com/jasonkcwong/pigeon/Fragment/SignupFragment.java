@@ -1,4 +1,4 @@
-package com.jasonkcwong.pigeon;
+package com.jasonkcwong.pigeon.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.jasonkcwong.pigeon.AccountActivity;
 import com.jasonkcwong.pigeon.Models.User;
+import com.jasonkcwong.pigeon.PigeonActivity;
+import com.jasonkcwong.pigeon.R;
 
 /**
  * Created by jason on 16-07-30.
@@ -108,7 +111,6 @@ public class SignupFragment extends Fragment {
             //Intent
 
             Intent intent = new Intent(getActivity(), PigeonActivity.class);
-            intent.putExtra(PigeonActivity.EXTRA_CONTACT, PigeonActivity.CONTACT_TRUE);
             startActivity(intent);
             getActivity().finish();
         }
@@ -162,7 +164,5 @@ public class SignupFragment extends Fragment {
     private boolean validatePhone(String phoneNumber){
         return android.util.Patterns.PHONE.matcher(phoneNumber).matches();
     }
-
-
 
 }
