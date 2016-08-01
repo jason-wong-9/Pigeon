@@ -28,7 +28,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         Contact contact = mList.get(position);
         View view = convertView;
         if (view == null) {
@@ -38,6 +38,14 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         nameText = (TextView) view.findViewById(R.id.nameText);
 
         nameText.setText(contact.getDisplayName());
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(view, position);
+                }
+            }
+        });
         return view;
     }
 }

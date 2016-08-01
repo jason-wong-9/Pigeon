@@ -29,6 +29,16 @@
             android:label="Pigeon"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/MyMaterialTheme"/>
+        <activity
+            android:name=".ChatActivity"
+            android:label="Chat"
+            android:windowSoftInputMode="adjustResize"
+            android:theme= "@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PigeonActivity" />
+            />
+        </activity>
 
     </application>
 

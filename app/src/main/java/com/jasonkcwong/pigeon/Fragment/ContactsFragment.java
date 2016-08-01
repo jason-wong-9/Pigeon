@@ -1,6 +1,7 @@
 package com.jasonkcwong.pigeon.Fragment;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jasonkcwong.pigeon.Adapters.ContactAdapter;
+import com.jasonkcwong.pigeon.ChatActivity;
 import com.jasonkcwong.pigeon.Models.Contact;
 import com.jasonkcwong.pigeon.Models.ContactBook;
 import com.jasonkcwong.pigeon.Models.User;
@@ -37,12 +39,13 @@ import java.util.List;
  */
 public class ContactsFragment extends Fragment implements OnItemClickListener{
     public static final String TAG = ContactsFragment.class.getName();
+    public static final String EXTRA_CONTACT = "CONTACT";
     final int REQUEST_CODE_ASK_PERMISSIONS = 123;
     private ListView mListView;
     private ContactAdapter mAdapter;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    private List<Contact> mContacts;
+    private List<Contact> contactsFromContactApp;
     private ContactBook mContactBook;
 
     @Override
@@ -52,7 +55,7 @@ public class ContactsFragment extends Fragment implements OnItemClickListener{
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mContactBook = new ContactBook();
-        mContacts = new ArrayList<>();
+        contactsFromContactApp = new ArrayList<>();
         retrieveAllContacts();
 
         mContactBook.sortContact();
@@ -63,13 +66,11 @@ public class ContactsFragment extends Fragment implements OnItemClickListener{
     }
 
     @Override
-    public void onCardClick(View view, int position) {
+    public void onItemClick(View view, int position) {
         //Intent to Chat
-    }
-
-    @Override
-    public boolean onCardLongClick(View view, int position) {
-        return false;
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        intent.putExtra("CONTACT", mContactBook.getContacts().get(position));
+        startActivity(intent);
     }
 
     private void retrieveContacts(){
@@ -88,7 +89,7 @@ public class ContactsFragment extends Fragment implements OnItemClickListener{
                 String phoneNumber = cursor.getString(indexNumber);
                 Contact contact = new Contact(name, phoneNumber);
                 Log.d(TAG, "Add contact with name = " + name + " and phone number = " + phoneNumber);
-                mContacts.add(contact);
+                contactsFromContactApp.add(contact);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -140,7 +141,7 @@ public class ContactsFragment extends Fragment implements OnItemClickListener{
                     if (child.getKey().equals(mAuth.getCurrentUser().getUid())){
                         continue;
                     }
-                    for (Contact contact: mContacts){
+                    for (Contact contact: contactsFromContactApp){
                         if (PhoneNumberUtils.compare(contact.getPhoneNumber(), phoneNumber)){
                             contact.setUid(child.getKey());
                             mContactBook.addContact(contact);

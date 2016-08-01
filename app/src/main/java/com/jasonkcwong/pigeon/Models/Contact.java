@@ -1,9 +1,11 @@
 package com.jasonkcwong.pigeon.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by jason on 16-07-30.
  */
-public class Contact {
+public class Contact implements Serializable{
     private String displayName;
     private String phoneNumber;
     private String uid;
