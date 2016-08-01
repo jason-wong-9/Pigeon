@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 /**
  * Created by jason on 16-07-31.
  */
-public class TabFragment extends Fragment {
+public class ChatFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_contact, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         return rootView;
     }
 }

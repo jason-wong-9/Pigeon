@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="@null"
-    android:id="@+id/contact_list"
+    android:id="@+id/chat_list"
     android:listSelector="@android:color/transparent"
     android:drawSelectorOnTop="true"
     android:descendantFocusability="beforeDescendants" />

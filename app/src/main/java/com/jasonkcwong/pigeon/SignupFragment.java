@@ -27,6 +27,7 @@ import com.jasonkcwong.pigeon.Models.User;
  */
 public class SignupFragment extends Fragment {
     public final String TAG = SignupFragment.class.getName();
+    public final int MIN_CHARCOUNT = 6;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -38,6 +39,8 @@ public class SignupFragment extends Fragment {
     private Button mSignupButton;
     private Button mSwitchButton;
 
+    private boolean isTapped;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class SignupFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_signup, container, false);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        isTapped = false;
 
         mEmailText = (EditText) rootView.findViewById(R.id.signup_email_editext);
         mPasswordText = (EditText) rootView.findViewById(R.id.signup_password_editext);
@@ -56,7 +60,8 @@ public class SignupFragment extends Fragment {
         mSignupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!validateForm()) return;
+                if (!validateForm() && isTapped) return;
+                isTapped = true;
                 signup();
             }
         });
@@ -92,6 +97,7 @@ public class SignupFragment extends Fragment {
                         } else {
                             Toast.makeText(getActivity(), "Failed to create account", Toast.LENGTH_SHORT).show();
                         }
+                        isTapped = false;
                     }
                 });
     }
@@ -136,6 +142,8 @@ public class SignupFragment extends Fragment {
         if (TextUtils.isEmpty(password)) {
             mPasswordText.setError("Required.");
             valid = false;
+        } else if (password.length() < MIN_CHARCOUNT){
+            mPasswordText.setError("Min " + MIN_CHARCOUNT + " chars.");
         } else {
             mPasswordText.setError(null);
         }

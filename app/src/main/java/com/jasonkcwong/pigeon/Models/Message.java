@@ -7,19 +7,27 @@ import java.util.Date;
  * Created by jason on 16-07-30.
  */
 public class Message {
-    public String senderId;
-    public String receiverId;
+    public User sender;
+    public User receiver;
     public String content;
     public String date;
 
     public Message(){
 
     }
-    public Message(String senderId, String receiverId, String content){
-        this.senderId = senderId;
-        this.receiverId = receiverId;
+    public Message(User sender, User receiver, String content){
+        this.sender = sender;
+        this.receiver = receiver;
         this.content = content;
         this.date = getCurrentTimeStamp();
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public User getReceiver() {
+        return receiver;
     }
 
     private String getCurrentTimeStamp(){
@@ -27,4 +35,5 @@ public class Message {
         Date now = new Date();
         return simpleDateFormat.format(now);
     }
+
 }

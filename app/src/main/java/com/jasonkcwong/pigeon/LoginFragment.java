@@ -75,7 +75,7 @@ public class LoginFragment extends Fragment {
                             Log.d(TAG, "Logged on sucessfully");
                             onAuthSuccess();
                         } else {
-                            Toast.makeText(getActivity(), "Authentication Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Failed to sign in", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

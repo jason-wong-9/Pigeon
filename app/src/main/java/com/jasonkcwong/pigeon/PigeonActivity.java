@@ -1,6 +1,7 @@
 package com.jasonkcwong.pigeon;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,7 +14,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.jasonkcwong.pigeon.Models.Contact;
 
 import java.util.ArrayList;
@@ -27,6 +31,7 @@ public class PigeonActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
+    private FirebaseAuth mAuth;
 
     public static final String EXTRA_CONTACT = "contact";
     public static final int CONTACT_FALSE = 0;
@@ -34,14 +39,15 @@ public class PigeonActivity extends AppCompatActivity {
 
     final int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
-    public static final String frag_title_1 = "Contact";
-    public static final String frag_title_2 = "Chat";
-    public static final String frag_title_3 = "Setting";
+    public static final String frag_title_1 = "Chat";
+    public static final String frag_title_2 = "Contact";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tab);
+        setContentView(R.layout.activity_pigeon);
+
+        mAuth = FirebaseAuth.getInstance();
 
         int type = getIntent().getIntExtra(EXTRA_CONTACT, CONTACT_FALSE);
 
@@ -64,17 +70,34 @@ public class PigeonActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager){
         PigeonPagerAdapter adapter = new PigeonPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new TabFragment(), frag_title_1);
+        adapter.addFragment(new ContactFragment(), frag_title_1);
         Log.d(TAG, frag_title_1 + "Added");
 
-        adapter.addFragment(new TabFragment(), frag_title_2);
+        adapter.addFragment(new ChatFragment(), frag_title_2);
         Log.d(TAG, frag_title_2 + "Added");
-
-        adapter.addFragment(new TabFragment(), frag_title_3);
-        Log.d(TAG, frag_title_3 + "Added");
 
         viewPager.setAdapter(adapter);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout){
+            mAuth.signOut();
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivity(intent);
+            finish();
+            //Clear Everything
+        }
+        return true;
+    }
+
     private List<Contact> retrieveContacts(){
         ContentResolver contentResolver = getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -101,17 +124,12 @@ public class PigeonActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(PigeonActivity.this,
                 android.Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
-
             if (ActivityCompat.shouldShowRequestPermissionRationale( PigeonActivity.this,
                     android.Manifest.permission.READ_CONTACTS)) {
-
-
             } else {
-
                 ActivityCompat.requestPermissions(PigeonActivity.this,
                         new String[]{android.Manifest.permission.READ_CONTACTS},
                         REQUEST_CODE_ASK_PERMISSIONS);
-
             }
         }
     }
@@ -125,8 +143,6 @@ public class PigeonActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     retrieveContacts();
-
-                } else {
 
                 }
                 return;
