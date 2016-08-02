@@ -108,8 +108,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         String messageDate = message.getDate();
         if (messageDate.contains(DateUtil.getTodayDate())){
             timeText.setText(messageDate.substring(11));
+        } else {
+            timeText.setText(messageDate);
         }
-        timeText.setText(messageDate);
 
         return view;
     }

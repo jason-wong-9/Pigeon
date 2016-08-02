@@ -13,7 +13,6 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.jasonkcwong.pigeon.Adapters.PigeonPagerAdapter;
-import com.jasonkcwong.pigeon.Fragment.ChatsFragment;
 import com.jasonkcwong.pigeon.Fragment.ContactsFragment;
 
 /**
@@ -27,8 +26,7 @@ public class PigeonActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private PigeonPagerAdapter adapter;
 
-    public static final String frag_title_1 = "Chat";
-    public static final String frag_title_2 = "Contact";
+    public static final String frag_title_1 = "Contact";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,11 +49,8 @@ public class PigeonActivity extends AppCompatActivity {
     private void setupViewPager(){
         adapter = new PigeonPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new ChatsFragment(), frag_title_1);
+        adapter.addFragment(new ContactsFragment(), frag_title_1);
         Log.d(TAG, frag_title_1 + "Added");
-
-        adapter.addFragment(new ContactsFragment(), frag_title_2);
-        Log.d(TAG, frag_title_2 + "Added");
 
         mViewPager.setAdapter(adapter);
     }
