@@ -43,7 +43,7 @@ public class ChatActivity extends AppCompatActivity{
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+                //Save to Firebase and notify adapter
             }
         });
      }

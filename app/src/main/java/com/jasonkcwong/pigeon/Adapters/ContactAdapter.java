@@ -20,6 +20,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
     private List<Contact> mList;
     private OnItemClickListener mOnItemClickListener;
     private TextView nameText;
+    private TextView phoneText;
 
     public ContactAdapter(Context context, List<Contact> contacts, OnItemClickListener listener){
         super(context, android.R.layout.simple_list_item_1, contacts);
@@ -36,8 +37,10 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
             view = inflater.inflate(R.layout.contact_adapter_item, null);
         }
         nameText = (TextView) view.findViewById(R.id.nameText);
+        phoneText = (TextView) view.findViewById(R.id.phoneText);
 
         nameText.setText(contact.getDisplayName());
+        phoneText.setText(contact.getPhoneNumber());
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
