@@ -24,11 +24,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jasonkcwong.pigeon.Adapters.ContactAdapter;
-import com.jasonkcwong.pigeon.ChatActivity;
+import com.jasonkcwong.pigeon.MessageActivity;
 import com.jasonkcwong.pigeon.Models.Contact;
 import com.jasonkcwong.pigeon.Models.ContactBook;
 import com.jasonkcwong.pigeon.Models.User;
-import com.jasonkcwong.pigeon.OnItemClickListener;
+import com.jasonkcwong.pigeon.Listeners.OnItemClickListener;
 import com.jasonkcwong.pigeon.R;
 
 import java.util.ArrayList;
@@ -67,8 +67,8 @@ public class ContactsFragment extends Fragment implements OnItemClickListener{
     @Override
     public void onItemClick(View view, int position) {
         //Intent to Chat
-        Intent intent = new Intent(getActivity(), ChatActivity.class);
-        intent.putExtra(ChatActivity.EXTRA_CONTACT, mContactBook.getContacts().get(position));
+        Intent intent = new Intent(getActivity(), MessageActivity.class);
+        intent.putExtra(MessageActivity.EXTRA_CONTACT, mContactBook.getContacts().get(position));
         startActivity(intent);
     }
 

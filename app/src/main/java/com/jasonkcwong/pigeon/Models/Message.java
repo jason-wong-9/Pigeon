@@ -1,7 +1,6 @@
 package com.jasonkcwong.pigeon.Models;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.jasonkcwong.pigeon.Utils.DateUtil;
 
 /**
  * Created by jason on 16-07-30.
@@ -19,7 +18,7 @@ public class Message {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.content = content;
-        this.date = getCurrentTimeStamp();
+        this.date = DateUtil.getCurrentTimeStamp();
     }
 
     public String getSenderId() {
@@ -30,10 +29,13 @@ public class Message {
         return receiverId;
     }
 
-    private String getCurrentTimeStamp(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date now = new Date();
-        return simpleDateFormat.format(now);
+    public String getContent(){
+        return content;
     }
+
+    public String getDate(){
+        return date;
+    }
+
 
 }

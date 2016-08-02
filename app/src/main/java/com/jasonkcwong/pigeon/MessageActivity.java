@@ -19,16 +19,19 @@ import com.jasonkcwong.pigeon.Adapters.MessageAdapter;
 import com.jasonkcwong.pigeon.Models.Contact;
 import com.jasonkcwong.pigeon.Models.Message;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by jason on 16-08-01.
  */
-public class ChatActivity extends AppCompatActivity{
-    public static final String TAG = ChatActivity.class.getName();
+public class MessageActivity extends AppCompatActivity{
+    public static final String TAG = MessageActivity.class.getName();
     public static final String EXTRA_CONTACT = "CONTACT";
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private DatabaseReference mMessageReference;
 
     private ActionBar mActionBar;
     private EditText mMessageText;
@@ -49,13 +52,14 @@ public class ChatActivity extends AppCompatActivity{
 
         mMessageText = (EditText) findViewById(R.id.edit_message);
         mSubmitButton = (Button) findViewById(R.id.button_submit);
-        mChatListView = (ListView) findViewById(R.id.chat_list);
-
-//        mAdapter = new ContactAdapter(ChatActivity.this, );
-//        mChatListView.setAdapter(mAdapter);
+        mChatListView = (ListView) findViewById(R.id.message_list);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mMessageReference = mDatabase.child("messages").child(mAuth.getCurrentUser().getUid());
+
+        mAdapter = new MessageAdapter(this, mMessageReference ,new ArrayList<Message>(),contact);
+        mChatListView.setAdapter(mAdapter);
 
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,12 +72,17 @@ public class ChatActivity extends AppCompatActivity{
         });
      }
 
+
     private void submitMessageToFirebase(String messageString, String receiverUid){
         String userId = mAuth.getCurrentUser().getUid();
         Message message = new Message(userId, receiverUid,messageString);
-        mDatabase.child("messages").child(userId).setValue(message);
-        mDatabase.child("messages").child(receiverUid).setValue(message);
+        String myKey = mDatabase.child("messages").child(userId).push().getKey();
+        mDatabase.child("messages").child(userId).child(myKey).setValue(message);
+
+        String receiverKey = mDatabase.child("messages").child(receiverUid).push().getKey();
+        mDatabase.child("messages").child(receiverUid).child(receiverKey).setValue(message);
         Log.d(TAG, messageString + "ADDed");
+        mMessageText.setText("");
     }
 
     @Override
@@ -81,6 +90,7 @@ public class ChatActivity extends AppCompatActivity{
         int id = item.getItemId();
         if (id == android.R.id.home) {
             Intent intent = new Intent(this, PigeonActivity.class);
+            mAdapter.cleanupListener();
             startActivity(intent);
             finish();
         }

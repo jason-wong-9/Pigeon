@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.jasonkcwong.pigeon.Models.Contact;
-import com.jasonkcwong.pigeon.OnItemClickListener;
+import com.jasonkcwong.pigeon.Listeners.OnItemClickListener;
 import com.jasonkcwong.pigeon.R;
 
 import java.util.List;
