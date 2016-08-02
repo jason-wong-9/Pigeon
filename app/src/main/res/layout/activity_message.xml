@@ -9,7 +9,7 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:id="@+id/chat_list"
+        android:id="@+id/message_list"
         android:layout_weight="0.85"
         android:layout_gravity="center_horizontal"
         android:layout_height="0dp" />

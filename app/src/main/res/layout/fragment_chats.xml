@@ -1,8 +1,0 @@
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:divider="@null"
-    android:id="@+id/chat_list"
-    android:listSelector="@android:color/transparent"
-    android:drawSelectorOnTop="true"
-    android:descendantFocusability="beforeDescendants" />

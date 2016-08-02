@@ -39,7 +39,6 @@ import java.util.List;
  */
 public class ContactsFragment extends Fragment implements OnItemClickListener{
     public static final String TAG = ContactsFragment.class.getName();
-    public static final String EXTRA_CONTACT = "CONTACT";
     final int REQUEST_CODE_ASK_PERMISSIONS = 123;
     private ListView mListView;
     private ContactAdapter mAdapter;
@@ -69,7 +68,7 @@ public class ContactsFragment extends Fragment implements OnItemClickListener{
     public void onItemClick(View view, int position) {
         //Intent to Chat
         Intent intent = new Intent(getActivity(), ChatActivity.class);
-        intent.putExtra("CONTACT", mContactBook.getContacts().get(position));
+        intent.putExtra(ChatActivity.EXTRA_CONTACT, mContactBook.getContacts().get(position));
         startActivity(intent);
     }
 

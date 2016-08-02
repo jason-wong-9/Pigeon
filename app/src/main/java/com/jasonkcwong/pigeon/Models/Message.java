@@ -7,27 +7,27 @@ import java.util.Date;
  * Created by jason on 16-07-30.
  */
 public class Message {
-    public User sender;
-    public User receiver;
+    public String senderId;
+    public String receiverId;
     public String content;
     public String date;
 
     public Message(){
 
     }
-    public Message(User sender, User receiver, String content){
-        this.sender = sender;
-        this.receiver = receiver;
+    public Message(String senderId, String receiverId, String content){
+        this.senderId = senderId;
+        this.receiverId = receiverId;
         this.content = content;
         this.date = getCurrentTimeStamp();
     }
 
-    public User getSender() {
-        return sender;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public User getReceiver() {
-        return receiver;
+    public String getReceiverId() {
+        return receiverId;
     }
 
     private String getCurrentTimeStamp(){
